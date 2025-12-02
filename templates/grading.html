@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Grading Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: #5568d3;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        .student-info {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .criteria-section {
+            margin-bottom: 30px;
+        }
+        
+        .criteria-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .criteria-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .rating-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .rating-buttons input[type="radio"] {
+            display: none;
+        }
+        
+        .rating-label {
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .rating-label:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .rating-buttons input[type="radio"]:checked + .rating-label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .comments-section {
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: inherit;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .total-score {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .score-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Speech Grading Tool</h1>
+            <div class="nav-buttons">
+                <a href="/dashboard" class="nav-btn">Dashboard</a>
+                <a href="/logout" class="nav-btn logout-btn">Logout</a>
+            </div>
+        </div>
+        
+        <form action="/submit_grade" method="POST" id="gradingForm">
+            <div class="student-info">
+                <div class="form-group">
+                    <label for="student_name">Student Name</label>
+                    <input type="text" id="student_name" name="student_name" required>
+                </div>
+            </div>
+            
+            <div class="criteria-section">
+                <div class="criteria-item">
+                    <div class="criteria-title">👁️ Eye Contact</div>
+                    <div class="rating-buttons">
+                        <input type="radio" id="eye1" name="eye_contact" value="1" required>
+                        <label for="eye1" class="rating-label">1 - Poor</label>
+                        
+                        <input type="radio" id="eye2" name="eye_contact" value="2">
+                        <label for="eye2" class="rating-label">2 - Fair</label>
+                        
+                        <input type="radio" id="eye3" name="eye_contact" value="3">
+                        <label for="eye3" class="rating-label">3 - Good</label>
+                        
+                        <input type="radio" id="eye4" name="eye_contact" value="4">
+                        <label for="eye4" class="rating-label">4 - Very Good</label>
+                        
+                        <input type="radio" id="eye5" name="eye_contact" value="5">
+                        <label for="eye5" class="rating-label">5 - Excellent</label>
+                    </div>
+                </div>
+                
+                <div class="criteria-item">
+                    <div class="criteria-title">🗣️ Voice Projection</div>
+                    <div class="rating-buttons">
+                        <input type="radio" id="voice1" name="voice_projection" value="1" required>
+                        <label for="voice1" class="rating-label">1 - Poor</label>
+                        
+                        <input type="radio" id="voice2" name="voice_projection" value="2">
+                        <label for="voice2" class="rating-label">2 - Fair</label>
+                        
+                        <input type="radio" id="voice3" name="voice_projection" value="3">
+                        <label for="voice3" class="rating-label">3 - Good</label>
+                        
+                        <input type="radio" id="voice4" name="voice_projection" value="4">
+                        <label for="voice4" class="rating-label">4 - Very Good</label>
+                        
+                        <input type="radio" id="voice5" name="voice_projection" value="5">
+                        <label for="voice5" class="rating-label">5 - Excellent</label>
+                    </div>
+                </div>
+                
+                <div class="criteria-item">
+                    <div class="criteria-title">📊 Content Quality</div>
+                    <div class="rating-buttons">
+                        <input type="radio" id="content1" name="content_quality" value="1" required>
+                        <label for="content1" class="rating-label">1 - Poor</label>
+                        
+                        <input type="radio" id="content2" name="content_quality" value="2">
+                        <label for="content2" class="rating-label">2 - Fair</label>
+                        
+                        <input type="radio" id="content3" name="content_quality" value="3">
+                        <label for="content3" class="rating-label">3 - Good</label>
+                        
+                        <input type="radio" id="content4" name="content_quality" value="4">
+                        <label for="content4" class="rating-label">4 - Very Good</label>
+                        
+                        <input type="radio" id="content5" name="content_quality" value="5">
+                        <label for="content5" class="rating-label">5 - Excellent</label>
+                    </div>
+                </div>
+                
+                <div class="criteria-item">
+                    <div class="criteria-title">🎭 Body Language</div>
+                    <div class="rating-buttons">
+                        <input type="radio" id="body1" name="body_language" value="1" required>
+                        <label for="body1" class="rating-label">1 - Poor</label>
+                        
+                        <input type="radio" id="body2" name="body_language" value="2">
+                        <label for="body2" class="rating-label">2 - Fair</label>
+                        
+                        <input type="radio" id="body3" name="body_language" value="3">
+                        <label for="body3" class="rating-label">3 - Good</label>
+                        
+                        <input type="radio" id="body4" name="body_language" value="4">
+                        <label for="body4" class="rating-label">4 - Very Good</label>
+                        
+                        <input type="radio" id="body5" name="body_language" value="5">
+                        <label for="body5" class="rating-label">5 - Excellent</label>
+                    </div>
+                </div>
+                
+                <div class="criteria-item">
+                    <div class="criteria-title">⏱️ Time Management</div>
+                    <div class="rating-buttons">
+                        <input type="radio" id="time1" name="time_management" value="1" required>
+                        <label for="time1" class="rating-label">1 - Poor</label>
+                        
+                        <input type="radio" id="time2" name="time_management" value="2">
+                        <label for="time2" class="rating-label">2 - Fair</label>
+                        
+                        <input type="radio" id="time3" name="time_management" value="3">
+                        <label for="time3" class="rating-label">3 - Good</label>
+                        
+                        <input type="radio" id="time4" name="time_management" value="4">
+                        <label for="time4" class="rating-label">4 - Very Good</label>
+                        
+                        <input type="radio" id="time5" name="time_management" value="5">
+                        <label for="time5" class="rating-label">5 - Excellent</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="total-score" id="totalScore" style="display: none;">
+                <div>Total Score</div>
+                <div class="score-display" id="scoreDisplay">0/25</div>
+            </div>
+            
+            <div class="comments-section">
+                <div class="form-group">
+                    <label for="comments">Comments/Feedback</label>
+                    <textarea id="comments" name="comments" placeholder="Provide constructive feedback..."></textarea>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit Grade</button>
+        </form>
+    </div>
+    
+    <script>
+        // Calculate and display total score
+        const form = document.getElementById('gradingForm');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const totalScoreSection = document.getElementById('totalScore');
+        
+        form.addEventListener('change', function() {
+            const radios = form.querySelectorAll('input[type="radio"]:checked');
+            let total = 0;
+            radios.forEach(radio => {
+                total += parseInt(radio.value);
+            });
+            
+            if (radios.length > 0) {
+                totalScoreSection.style.display = 'block';
+                scoreDisplay.textContent = total + '/25';
+            }
+        });
+    </script>
+</body>
+</html>
