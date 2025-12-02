@@ -1,0 +1,21 @@
+services:
+  db:
+    image: mysql:8.0 # Using a specific version is often better than 'latest'
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: helloworld
+      MYSQL_DATABASE: my_application_db
+      MYSQL_USER: app_user # Optional: create an additional user
+      MYSQL_PASSWORD: app_user_pw # Optional: password for the additional user
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+      # Optional: Mount custom configuration files if needed
+      # - ./my-custom-config.cnf:/etc/mysql/conf.d/my-custom-config.cnf
+
+volumes:
+  mysql_data:
+    driver: local

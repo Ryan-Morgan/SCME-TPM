@@ -1,15 +1,29 @@
 from flask import Flask, render_template, request, redirect
 import mysql.connector
+from mysql.connector import Error
 
 app = Flask(__name__)
 
 # Connect to your database
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Hotwheels68!",
-    database="SCME_users"
-)
+DB_CONFIG = {
+    'host': '127.0.0.1', # Use '127.0.0.1' if Flask is on the host machine
+    'database': 'my_application_db',
+    'user': 'root',
+    'password': 'my-secret-pw', # Replace with your actual password
+    'port': 3306
+}
+
+def get_db_connection():
+    """Establishes a new database connection."""
+    try:
+        conn = mysql.connector.connect(**DB_CONFIG)
+        if conn.is_connected():
+            print("Successfully connected to MySQL database")
+            return conn
+    except Error as e:
+        print(f"Error connecting to MySQL: {e}")
+        return None
+
 
 @app.route('/')
 def index():
@@ -40,4 +54,5 @@ def delete_user(user_id):
     return redirect('/')
 
 if __name__ == '__main__':
+    conn = get_db_connection()
     app.run(debug=True)

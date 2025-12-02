@@ -1,0 +1,7 @@
+run the integrated terminal on the database folder(right click on folder -> open in integrated terminal)
+
+docker compose up -d to make the database
+docker compose down --volumes when you update. --volumes will clear the volumes, and the init file will only run when empty or smth like that
+    data will persist without --volumes
+
+docker exec -it mysql_container mysql -u root -p
